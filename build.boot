@@ -17,3 +17,16 @@
          '[pandeiro.boot-http :refer [serve]]
          '[adzerk.boot-reload :refer [reload]]
 	 '[adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]) ;; make serve task visible
+
+
+;; define dev task as composition of subtasks
+(deftask dev
+  "Launch Immediate Feedback Development Environment"
+  []
+  (comp
+   (serve :dir "target")
+   (watch)
+   (reload)
+   (cljs-repl) ;; before cljs task
+   (cljs)
+   (target :dir #{"target"})))
