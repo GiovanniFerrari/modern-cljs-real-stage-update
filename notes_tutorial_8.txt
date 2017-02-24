@@ -1,0 +1,1 @@
+It works correctly with the new libs
