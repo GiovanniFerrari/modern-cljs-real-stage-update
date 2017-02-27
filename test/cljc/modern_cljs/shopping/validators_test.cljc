@@ -3,6 +3,12 @@
             #?(:clj [clojure.test :refer [deftest are testing]]
                :cljs [cljs.test :refer-macros [deftest are testing]])))
 
+(deftest validate-shopping-quantity-test
+  (testing "Shopping Form Quantity Validation"
+    (testing "/ Happy Path"
+      (are [expected actual] (= expected actual)
+        nil (validate-shopping-quantity "1")))))
+
 (deftest validate-shopping-form-test
   (testing "Shopping Form Validation"
     (testing "/ Happy Path"
@@ -16,7 +22,7 @@
 
            "Quantity can't be empty"
            (first (:quantity (validate-shopping-form "" "0" "0" "0")))
-
+ 
            "Price can't be empty"
            (first (:price (validate-shopping-form "1" "" "0" "0")))
 
