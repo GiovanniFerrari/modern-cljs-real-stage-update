@@ -14,8 +14,11 @@
                  [org.clojure/tools.nrepl "0.2.12"]    ;; needed by boot-http and  bREPL
                  [org.clojars.magomimmo/domina "2.0.0-SNAPSHOT"]
                  [hiccups "0.3.0"]
-                 [compojure "1.5.2"]])                   ;; routing lib
-
+                 [org.clojars.magomimmo/shoreleave-remote-ring "0.3.3"]
+                 [org.clojars.magomimmo/shoreleave-remote "0.3.1"]
+                 [compojure "1.5.2"]                   ;; routing lib
+                 [javax.servlet/javax.servlet-api "3.1.0"]     ;; for dev only
+                 ])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
@@ -27,7 +30,7 @@
   "Launch immediate feedback dev environment"
   []
   (comp
-   (serve :handler 'modern-cljs.core/handler ;; add ring handler
+   (serve :handler 'modern-cljs.remotes/app ;; add ring handler
           :resource-root "target"            ;; add resource-path
           :reload true)                      ;; reload server side ns
    (watch)
