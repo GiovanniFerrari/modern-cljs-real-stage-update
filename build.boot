@@ -5,7 +5,7 @@
  :dependencies '[
                  [org.clojure/clojure "1.8.0"]         ;; add CLJ
                  [org.clojure/clojurescript "1.9.473"] ;; add CLJS
-                 [adzerk/boot-cljs "1.7.170-3"]
+                 [adzerk/boot-cljs "1.7.228-2"]
                  [pandeiro/boot-http "0.7.6"]
                  [adzerk/boot-reload "0.5.1"]
                  [adzerk/boot-cljs-repl "0.3.0"]      ;; add bREPL
@@ -17,7 +17,7 @@
                  [compojure "1.5.2"]                   ;; for routing
                  [org.clojars.magomimmo/shoreleave-remote-ring "0.3.3"]
                  [org.clojars.magomimmo/shoreleave-remote "0.3.1"]
-                 [javax.servlet/servlet-api "2.5"]
+                 [javax.servlet/javax.servlet-api "3.1.0"]
                  [org.clojars.magomimmo/valip "0.4.0-SNAPSHOT"]
                  ])
 
