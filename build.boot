@@ -9,7 +9,7 @@
                  [pandeiro/boot-http "0.7.6"]
                  [adzerk/boot-reload "0.5.1"]
                  [adzerk/boot-cljs-repl "0.3.3"]       ;; add bREPL
-                 [com.cemerick/piggieback "0.2.1"]     ;; needed by bREPL 
+                 [com.cemerick/piggieback "0.2.1"]     ;; needed by bREPL
                  [weasel "0.7.0"]                      ;; needed by bREPL
                  [org.clojure/tools.nrepl "0.2.12"]    ;; needed by bREPL
                  [org.clojars.magomimmo/domina "2.0.0-SNAPSHOT"]
@@ -17,7 +17,7 @@
                  [compojure "1.5.2"]                   ;; for routing
                  [org.clojars.magomimmo/shoreleave-remote-ring "0.3.3"]
                  [org.clojars.magomimmo/shoreleave-remote "0.3.1"]
-                 [javax.servlet/javax.servlet-api "3.1.0"] 
+                 [javax.servlet/javax.servlet-api "3.1.0"]
                  [org.clojars.magomimmo/valip "0.4.0-SNAPSHOT"]
                  [enlive "1.1.6"]
                  [adzerk/boot-test "1.2.0"]
@@ -34,7 +34,7 @@
          )
 
 (def defaults {:test-dirs #{"test/cljc"} ; "test/clj" "test/cljs"
-              :output-to "main.js"  
+               :output-to "main.js"
                :testbed :phantom
                :namespaces '#{modern-cljs.shopping.validators-test
                               }});modern-cljs.login.validators-test
@@ -47,7 +47,7 @@
 
 (deftask tdd
   "Launch a customizable TDD Environment"
-  [e testbed        ENGINE kw     "the JS testbed engine (default phantom)" 
+  [e testbed        ENGINE kw     "the JS testbed engine (default phantom)"
    k httpkit               bool   "Use http-kit web server (default jetty)"
    n namespaces     NS     #{sym} "the set of namespace symbols to run tests in"
    o output-to      NAME   str    "the JS output file name for test (default main.js)"
@@ -69,16 +69,17 @@
      (watch :verbose verbose)
      (reload)
      (cljs-repl)
-     (test-cljs ;:out-file output-to 
-                :ids  ["cljc/modern_cljs/shopping"]
-                :js-env testbed 
+     (test-cljs ;:out-file output-to
+                :ids ["main"]
+               ; :verbosity 0
+                :js-env testbed
                 :namespaces namespaces
-                :update-fs? true
+                :update-fs? false
                 :optimizations optimizations)
      (test :namespaces namespaces)
      (target :dir #{"target"}))))
 
-(deftask dev 
+(deftask dev
   "Launch immediate feedback dev environment"
   []
   (comp
@@ -88,5 +89,8 @@
    (watch)
    (reload)
    (cljs-repl) ;; before cljs
-   (cljs :ids ["js/main"] )
+   (cljs  ) ; :ids ["main"]
    (target :dir #{"target"})))
+
+
+
