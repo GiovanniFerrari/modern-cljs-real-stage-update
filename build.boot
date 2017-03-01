@@ -70,7 +70,7 @@
      (reload)
      (cljs-repl)
      (test-cljs ;:out-file output-to 
-                :ids  ["html/js/main"]
+                :ids  ["cljc/modern_cljs/shopping"]
                 :js-env testbed 
                 :namespaces namespaces
                 :update-fs? true
