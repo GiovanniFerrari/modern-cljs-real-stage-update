@@ -70,7 +70,7 @@
      (reload)
      (cljs-repl)
      (test-cljs ;:out-file output-to 
-                :ids  ["js/shopping"]
+                :ids  ["html/js/main"]
                 :js-env testbed 
                 :namespaces namespaces
                 :update-fs? true
@@ -88,5 +88,5 @@
    (watch)
    (reload)
    (cljs-repl) ;; before cljs
-   (cljs :ids ["js/shopping"] )
+   (cljs :ids ["js/main"] )
    (target :dir #{"target"})))
