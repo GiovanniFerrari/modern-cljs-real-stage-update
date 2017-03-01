@@ -1,5 +1,6 @@
 (ns modern-cljs.shopping.validators-test
-  (:require [modern-cljs.shopping.validators :refer [validate-shopping-form]]
+  (:require [modern-cljs.shopping.validators :refer [validate-shopping-form
+                                                     validate-shopping-quantity]]
             #?(:clj [clojure.test :refer [deftest are testing]]
                :cljs [cljs.test :refer-macros [deftest are testing]])))
 
@@ -22,7 +23,7 @@
 
            "Quantity can't be empty"
            (first (:quantity (validate-shopping-form "" "0" "0" "0")))
- 
+
            "Price can't be empty"
            (first (:price (validate-shopping-form "1" "" "0" "0")))
 
@@ -55,6 +56,10 @@
 
            "Quantity can't be negative"
            (first (:quantity (validate-shopping-form "-1" "0" "0" "0")))))))
+
+
+
+
 
 
 

@@ -3,25 +3,26 @@
  :resource-paths #{"html"}
 
  :dependencies '[
-                 [org.clojure/clojure "1.7.0"]         ;; add CLJ
-                 [org.clojure/clojurescript "1.7.170"] ;; add CLJS
-                 [adzerk/boot-cljs "1.7.170-3"]
-                 [pandeiro/boot-http "0.7.0"]
-                 [adzerk/boot-reload "0.4.2"]
-                 [adzerk/boot-cljs-repl "0.3.0"]       ;; add bREPL
+                 [org.clojure/clojure "1.8.0"]         ;; add CLJ
+                 [org.clojure/clojurescript "1.9.494"] ;; add CLJS
+                 [adzerk/boot-cljs "1.7.228-2"]
+                 [pandeiro/boot-http "0.7.6"]
+                 [adzerk/boot-reload "0.5.1"]
+                 [adzerk/boot-cljs-repl "0.3.3"]       ;; add bREPL
                  [com.cemerick/piggieback "0.2.1"]     ;; needed by bREPL 
                  [weasel "0.7.0"]                      ;; needed by bREPL
                  [org.clojure/tools.nrepl "0.2.12"]    ;; needed by bREPL
                  [org.clojars.magomimmo/domina "2.0.0-SNAPSHOT"]
                  [hiccups "0.3.0"]
-                 [compojure "1.4.0"]                   ;; for routing
-                 [org.clojars.magomimmo/shoreleave-remote-ring "0.3.1"]
+                 [compojure "1.5.2"]                   ;; for routing
+                 [org.clojars.magomimmo/shoreleave-remote-ring "0.3.3"]
                  [org.clojars.magomimmo/shoreleave-remote "0.3.1"]
-                 [javax.servlet/servlet-api "2.5"]
+                 [javax.servlet/javax.servlet-api "3.1.0"] 
                  [org.clojars.magomimmo/valip "0.4.0-SNAPSHOT"]
                  [enlive "1.1.6"]
-                 [adzerk/boot-test "1.0.7"]
-                 [crisptrutski/boot-cljs-test "0.2.1-SNAPSHOT"]
+                 [adzerk/boot-test "1.2.0"]
+                 [crisptrutski/boot-cljs-test "0.3.0"]
+                 [doo "0.1.7"]
                  ])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
@@ -32,11 +33,11 @@
          '[crisptrutski.boot-cljs-test :refer [test-cljs]]
          )
 
-(def defaults {:test-dirs #{"test/cljc" "test/clj" "test/cljs"}
-               :output-to "main.js"
+(def defaults {:test-dirs #{"test/cljc"} ; "test/clj" "test/cljs"
+              :output-to "main.js"  
                :testbed :phantom
                :namespaces '#{modern-cljs.shopping.validators-test
-                              modern-cljs.login.validators-test}})
+                              }});modern-cljs.login.validators-test
 
 (deftask add-source-paths
   "Add paths to :source-paths environment variable"
@@ -52,7 +53,7 @@
    o output-to      NAME   str    "the JS output file name for test (default main.js)"
    O optimizations  LEVEL  kw     "the optimization level (default none)"
    p port           PORT   int    "the web server port to listen on (default 3000)"
-   t dirs           PATH   #{str} "test paths (default test/clj test/cljs test/cljc)"   
+   t dirs           PATH   #{str} "test paths (default  test/cljc)" ;test/clj test/cljs
    v verbose               bool   "Print which files have changed (default false)"]
   (let [dirs (or dirs (:test-dirs defaults))
         output-to (or output-to (:output-to defaults))
@@ -68,7 +69,8 @@
      (watch :verbose verbose)
      (reload)
      (cljs-repl)
-     (test-cljs :out-file output-to 
+     (test-cljs ;:out-file output-to 
+                :ids  ["js/shopping"]
                 :js-env testbed 
                 :namespaces namespaces
                 :update-fs? true
@@ -86,6 +88,5 @@
    (watch)
    (reload)
    (cljs-repl) ;; before cljs
-   (cljs)
+   (cljs :ids ["js/shopping"] )
    (target :dir #{"target"})))
-
