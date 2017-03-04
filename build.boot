@@ -46,27 +46,33 @@
    k httpkit bool "use httt-kit web server instead of jetty"]
   *opts*)
 
-
-;
 (deftask tdd
   "Launch a customizable TDD Environment"
-  [t dirs PATH #{str} "test paths"
-   k httpkit bool "Use http-kit web server instead of jetty"
-   v verbose bool "Print which files have changed"]
-  (let [dirs (or dirs #{"test/cljc" "test/clj" "test/cljs"})]
+  [e testbed        ENGINE kw     "The JS testbed engine (default phantom)"
+   k httpkit               bool   "Use http-kit web server (default jetty)"
+   o output-to      NAME   str    "The JS output file name for test (default main.js)"
+   O optimizations  LEVEL  kw     "The optimization level (default none)"
+   p port           PORT   int    "The web server port to listen on (default 3000)"
+   t dirs           PATH   #{str} "Test paths (default test/clj test/cljs test/cljc)"
+   v verbose               bool   "Print which files have changed (default false)"]
+  (let [dirs        (or dirs #{"test/cljc" "test/clj" "test/cljs"})
+        output-to   (or output-to "main.js")
+        testbed     (or testbed :phantom)]
     (comp
-     (serve :handler 'modern-cljs.core/app
-            :resource-root "target"
-            :reload true
-            :httpkit httpkit)
+     (serve :handler        'modern-cljs.core/app
+            :resource-root  "target"
+            :reload         true
+            :httpkit        httpkit
+            :port           port)
      (add-source-paths :dirs dirs)
      (watch :verbose verbose)
      (reload :ws-host "localhost")
      (cljs-repl)
-     (test-cljs :out-file "main.js"
-                :js-env :phantom
-                :namespaces '#{modern-cljs.shopping.validators-test}
-                :update-fs? true)
+     (test-cljs :out-file       output-to
+                :js-env         testbed
+                :namespaces     '#{modern-cljs.shopping.validators-test}
+                :update-fs?     true
+                :optimizations  optimizations)
      (test :namespaces '#{modern-cljs.shopping.validators-test})
      (target :dir #{"target"}))))
 
