@@ -1,0 +1,8 @@
+
+
+{:require [ modern-cljs.shopping modern-cljs.shopping.validators-test
+          ]; modern-cljs.login modern-cljs.login.validators-test
+ :compiler-options {
+	 	     :asset-path "main.out"}
+}
+; modern-cljs.shopping.validators 
