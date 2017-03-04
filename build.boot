@@ -54,7 +54,8 @@
    O optimizations  LEVEL  kw     "The optimization level (default none)"
    p port           PORT   int    "The web server port to listen on (default 3000)"
    t dirs           PATH   #{str} "Test paths (default test/clj test/cljs test/cljc)"
-   v verbose               bool   "Print which files have changed (default false)"]
+   v verbose               bool   "Print which files have changed (default false)"
+   n namespaces     NS     #{sym} "the set of namespace symbols to run tests in"]
   (let [dirs        (or dirs #{"test/cljc" "test/clj" "test/cljs"})
         output-to   (or output-to "main.js")
         testbed     (or testbed :phantom)]
@@ -72,8 +73,9 @@
                 :js-env         testbed
                 :namespaces     '#{modern-cljs.shopping.validators-test}
                 :update-fs?     true
-                :optimizations  optimizations)
-     (test :namespaces '#{modern-cljs.shopping.validators-test})
+                :optimizations  optimizations
+                :namespaces namespaces)
+     (test :namespaces namespaces)
      (target :dir #{"target"}))))
 
 ;;; add dev task
