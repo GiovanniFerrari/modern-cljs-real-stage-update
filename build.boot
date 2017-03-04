@@ -37,7 +37,7 @@
               ; :output-to "main.js"
                :testbed :phantom
                :namespaces '#{modern-cljs.shopping.validators-test
-                             }}); modern-cljs.login.validators-test
+                             modern-cljs.login.validators-test }});
 
 (deftask add-source-paths
   "Add paths to :source-paths environment variable"
