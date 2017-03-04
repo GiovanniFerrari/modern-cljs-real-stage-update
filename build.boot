@@ -31,27 +31,37 @@
          '[adzerk.boot-test :refer [test]]
          '[crisptrutski.boot-cljs-test :refer [test-cljs]])
 
-(deftask testing
-  []
-  (set-env! :source-paths #(conj % "test/cljc"))
+
+(deftask add-source-paths
+  "Add paths to :source-paths environment variable"
+  [t dirs PATH #{str} ":source-paths"]
+  (merge-env! :source-paths dirs)
   identity)
 
+
+(deftask dummy
+  "A dummy task"
+  [t dirs PATH #{str} ":source-paths"]
+  *opts*)
+
 (deftask tdd
-  []
-  (comp
-   (serve :handler 'modern-cljs.core/app
-          :resource-root "target"
-          :reload true)
-   (testing)
-   (watch)
-   (reload :ws-host "localhost")
-   (cljs-repl)
-   (test-cljs :out-file "main.js"
-              :js-env :phantom
-              :namespaces '#{modern-cljs.shopping.validators-test}
-              :update-fs? true)
-   (test :namespaces '#{modern-cljs.shopping.validators-test})
-   (target :dir #{"target"})))
+  "Launch a customizable TDD Environment"
+  [t dirs PATH #{str} "test paths"]
+  (let [dirs (or dirs #{"test/cljc" "test/clj" "test/cljs"})]
+    (comp
+     (serve :handler 'modern-cljs.core/app
+            :resource-root "target"
+            :reload true)
+     (add-source-paths :dirs dirs)
+     (watch)
+     (reload :ws-host "localhost")
+     (cljs-repl)
+     (test-cljs :out-file "main.js"
+                :js-env :phantom
+                :namespaces '#{modern-cljs.shopping.validators-test}
+                :update-fs? true)
+     (test :namespaces '#{modern-cljs.shopping.validators-test})
+     (target :dir #{"target"}))))
 
 ;;; add dev task
 (deftask dev
