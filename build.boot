@@ -5,7 +5,7 @@
  :dependencies '[
                  [org.clojure/clojure "1.8.0"]         ;; add CLJ
                  [org.clojure/clojurescript "1.9.473"] ;; add CLJS
-                 [adzerk/boot-cljs "1.7.228-2"]
+                 [adzerk/boot-cljs "1.7.170-3"]
                  [pandeiro/boot-http "0.7.6"]
                  [adzerk/boot-reload "0.5.1"]
                  [adzerk/boot-cljs-repl "0.3.0"]      ;; add bREPL
@@ -21,7 +21,7 @@
                  [org.clojars.magomimmo/valip "0.4.0-SNAPSHOT"]
                  [enlive "1.1.6"]
                  [adzerk/boot-test "1.2.0"]
-                 [crisptrutski/boot-cljs-test "0.3.0"]
+                 [crisptrutski/boot-cljs-test "0.2.1-SNAPSHOT"]
                  ])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
@@ -36,6 +36,24 @@
   []
   (set-env! :source-paths #(conj % "test/cljc"))
   identity)
+
+;
+(deftask tdd
+  []
+  (comp
+   (serve :handler 'modern-cljs.core/app
+          :resource-root "target"
+          :reload true)
+   (testing)
+   (watch)
+   (reload)
+   (cljs-repl)
+   (test-cljs :out-file "main.js"
+              :js-env :phantom
+              :namespaces '#{modern-cljs.shopping.validators-test}
+              :update-fs? true)
+   (test :namespaces '#{modern-cljs.shopping.validators-test})
+   (target :dir #{"target"})))
 
 ;;; add dev task
 (deftask dev
