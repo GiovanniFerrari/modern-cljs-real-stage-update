@@ -41,19 +41,26 @@
 
 (deftask dummy
   "A dummy task"
-  [t dirs PATH #{str} ":source-paths"]
+  [t dirs PATH #{str} ":source-paths"
+   v verbose bool "print which files have changed"
+   k httpkit bool "use httt-kit web server instead of jetty"]
   *opts*)
 
+
+;
 (deftask tdd
   "Launch a customizable TDD Environment"
-  [t dirs PATH #{str} "test paths"]
+  [t dirs PATH #{str} "test paths"
+   k httpkit bool "Use http-kit web server instead of jetty"
+   v verbose bool "Print which files have changed"]
   (let [dirs (or dirs #{"test/cljc" "test/clj" "test/cljs"})]
     (comp
      (serve :handler 'modern-cljs.core/app
             :resource-root "target"
-            :reload true)
+            :reload true
+            :httpkit httpkit)
      (add-source-paths :dirs dirs)
-     (watch)
+     (watch :verbose verbose)
      (reload :ws-host "localhost")
      (cljs-repl)
      (test-cljs :out-file "main.js"
