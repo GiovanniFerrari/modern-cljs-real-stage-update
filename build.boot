@@ -67,7 +67,7 @@
             :port port)
      (add-source-paths :dirs dirs)
      (watch :verbose verbose)
-     (reload)
+     (reload :ws-host "localhost")
      (cljs-repl)
      (test-cljs ;:out-file output-to
                
