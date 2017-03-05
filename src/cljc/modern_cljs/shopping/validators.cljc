@@ -5,6 +5,7 @@
                                       decimal-string?
                                       gt]]))
 
+
 (defn validate-shopping-form [quantity price tax discount]
   (validate {:quantity quantity :price price :tax tax :discount discount}
 
@@ -29,3 +30,10 @@
             ;; other specific platform validations (not at the moment)
 
             ))
+
+(defn validate-shopping-field [field value]
+  (case field
+    :quantity (first (:quantity (validate-shopping-form value "0" "0" "0")))
+    :price (first (:price (validate-shopping-form "1" value "0" "0")))
+    :tax (first (:tax (validate-shopping-form "1" "0" value "0")))
+    :discount (first (:discount (validate-shopping-form "1" "0" "0" value)))))
