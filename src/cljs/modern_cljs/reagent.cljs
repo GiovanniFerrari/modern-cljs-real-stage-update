@@ -1,13 +1,15 @@
 (ns modern-cljs.reagent
-  (:require [reagent.core :as r]
+  (:require [reagent.core :as r :refer [render]] ;; refer render to be used in the init function
+            [domina.core :as dom :refer [by-id]]
+            [clojure.string :as s :refer [trim blank?]]
             [cljsjs.marked]))
 
-(def data [{:id 1
-            :author "Pete Hunt"
-            :text "This is one comment"}
-           {:id 2
-            :author "Jordan Walke"
-            :text "This is *another* comment"}])
+(def data (r/atom [{:id 1
+                    :author "Pete Hunt"
+                    :text "This is one comment"}
+                   {:id 2
+                    :author "Jordan Walke"
+                    :text "This is *another* comment"}]))
 
 (defn comment-component [author comment]
   [:div 
@@ -17,14 +19,44 @@
 
 (defn comment-list [comments]
   [:div
-   (for [{:keys [id author text]} comments] 
+   (for [{:keys [id author text]} @comments] 
      ^{:key id} [comment-component author text])])
 
-(defn comment-form []
-  [:div "Hello, world! I'm a comment-form"])
+(defn handle-comment-on-click [comments comment]
+  (let [author (trim (:author @comment))
+        text (trim (:text @comment))]
+    (reset! comment {:author "" :text ""})
+    (when-not (or (blank? author) (blank? text))
+      (swap! comments conj {:id (.getTime (js/Date.)) :author author :text text}))))
+
+(defn comment-form [comments]
+  (let [comment (r/atom {:author "" :text ""})] 
+    (fn [comments] 
+      [:form
+       [:input {:type "text"
+                :placeholder "Your name"
+                :value (:author @comment)
+                :on-change #(swap! comment assoc :author (-> %
+                                                             .-target
+                                                             .-value))}]
+       [:input {:type "text"
+                :placeholder "Say something"
+                :value (:text @comment)
+                :on-change #(swap! comment assoc :text (-> %
+                                                           .-target
+                                                           .-value))}]
+       [:input {:type "button"
+                :value "Post"
+                :on-click #(handle-comment-on-click comments comment)}]])))
 
 (defn comment-box [comments]
   [:div 
    [:h1 "Comments"]
    [comment-list comments]
-   [comment-form]])
+   [comment-form comments]])
+
+(defn ^:export init []
+  (render [comment-box data] (by-id "content")))
+
+
+ 
