@@ -5,7 +5,7 @@
  :dependencies '[
                  [org.clojure/clojure "1.8.0"]         ;; add CLJ
                  [org.clojure/clojurescript "1.9.473"] ;; add CLJS
-                 [adzerk/boot-cljs "1.7.170-3"]
+                 [adzerk/boot-cljs "1.7.228-2"]
                  [pandeiro/boot-http "0.7.6"]
                  [adzerk/boot-reload "0.5.1"]
                  [adzerk/boot-cljs-repl "0.3.0"]       ;; add bREPL
