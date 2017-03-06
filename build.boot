@@ -5,7 +5,7 @@
  :dependencies '[
                  [org.clojure/clojure "1.8.0"]         ;; add CLJ
                  [org.clojure/clojurescript "1.9.494"] ;; add CLJS
-                 [adzerk/boot-cljs "1.7.228-2"]
+                 [adzerk/boot-cljs "1.7.170-3"]
                  [pandeiro/boot-http "0.7.6"]
                  [adzerk/boot-reload "0.5.1"]
                  [adzerk/boot-cljs-repl "0.3.3"]       ;; add bREPL
@@ -66,7 +66,7 @@
             :port port)
      (add-source-paths :dirs dirs)
      (watch :verbose verbose)
-     (reload )
+     (reload :ws-host "localhost")
      (cljs-repl)
      (test-cljs :out-file output-to 
                 :js-env testbed 

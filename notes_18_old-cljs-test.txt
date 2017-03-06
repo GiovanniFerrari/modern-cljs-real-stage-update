@@ -1,4 +1,0 @@
-per Giovanni:
-- ha risolto la questione del :main?
-- introduciamo un default per l'opzione :ws-host per settarla a localhost?
-
