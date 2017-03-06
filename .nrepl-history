@@ -1,0 +1,4 @@
+(re-matches #"..." nil)
+(re-matches #"..." "")
+(str nil)
+quit

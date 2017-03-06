@@ -1,0 +1,27 @@
+(require '[valip.predicates :as v])
+(v/present? nil)
+(v/present? "foo")
+(v/url? "http://www.google.com")
+quit
+(require '[valip.predicates :as v])
+(v/url? "www.google.com")
+quit
+(require '[valip.predicates :as v])
+(v/present? nil)
+(v/present? "foo")
+((v/matches "...")"foo")
+((v/matches #"...")"foo")
+((v/matches #"...")nil)
+(v/alphanumeric? nil)
+quit
+(require '[valip.predicates :as v])
+(v/url? "http://www.google.com")
+(v/valid-email-domain? "me@googlenospam.com")
+quit
+ (require '[valip.predicates :as v])
+(v/present? "foo")
+(v/url? "www.google.com")
+(v/valid-email-domain? "me@googlenospam.com")
+(v/email-address? nil)
+(v/alphanumeric? nil)
+quit

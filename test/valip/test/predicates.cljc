@@ -1,7 +1,24 @@
 (ns valip.test.predicates
-  (:use valip.predicates
-        valip.java.predicates)
-  (:use clojure.test))
+  #?(:cljs (:require [valip.predicates :refer [present?
+                                               matches
+                                               max-length
+                                               min-length
+                                               email-address?
+                                               digits?
+                                               integer-string?
+                                               decimal-string?
+                                               gt
+                                               gte
+                                               lt
+                                               lte
+                                               over
+                                               under
+                                               at-most
+                                               at-least
+                                               between
+                                               url?]]
+                     [cljs.test :refer-macros [deftest is]])
+     :clj (:use valip.predicates clojure.test)))
 
 (deftest test-present?
   (is (not (present? nil)))
@@ -10,20 +27,27 @@
   (is (present? "foo")))
 
 (deftest test-matches
+  (is (not ((matches #"...") nil)))  ; corner case
   (is ((matches #"...") "foo"))
   (is (not ((matches #"...") "foobar"))))
 
 (deftest test-max-length
-  (is ((max-length 5) "hello"))
+  (is ((max-length 5) ""))       ; corner case
+  (is ((max-length 5) nil))
+  (is ((max-length 5) "hello"))  ; corner case
   (is ((max-length 5) "hi"))
   (is (not ((max-length 5) "hello world"))))
 
-(deftest test-max-length
+(deftest test-min-length
+  (is (not ((min-length 5) "")))    ; corner case
+  (is (not ((min-length 5) nil)))   ; corner case
   (is ((min-length 5) "hello"))
   (is ((min-length 5) "hello world"))
   (is (not ((min-length 5) "hi"))))
 
 (deftest test-email-address?
+  (is (not (email-address? "")))    ; corner case
+  (is (not (email-address? nil)))   ; corner case
   (is (email-address? "foo@example.com"))
   (is (email-address? "foo+bar@example.com"))
   (is (email-address? "foo-bar@example.com"))
@@ -34,22 +58,24 @@
   (is (not (email-address? "foo bar@example.com")))
   (is (not (email-address? "foo@foo_bar.com"))))
 
-(deftest test-valid-email-domain?
-  (is (valid-email-domain? "example@google.com"))
-  (is (not (valid-email-domain? "foo@example.com")))
-  (is (not (valid-email-domain? "foo@google.com.nospam")))
-  (is (not (valid-email-domain? "foo"))))
+  #?(:clj (deftest test-valid-email-domain?
+            (is (valid-email-domain? "example@google.com"))
+            (is (not (valid-email-domain? "foo@example.com")))
+            (is (not (valid-email-domain? "foo@google.com.nospam")))
+            (is (not (valid-email-domain? "foo")))))
 
 (deftest test-url?
+  (is (not (url? "")))
+  (is (not (url? nil)))
   (is (url? "http://google.com"))
   (is (url? "http://foo"))
-  (is (not (url? "foobar")))
-  (is (not (url? ""))))
+  (is (not (url? "foobar"))))
 
 (deftest test-digits?
+  (is (not (digits? "")))
+  (is (not (digits? nil)))
   (is (digits? "01234"))
-  (is (not (digits? "04xa")))
-  (is (not (digits? ""))))
+  (is (not (digits? "04xa"))))
 
 (deftest test-integer-string?
   (is (integer-string? "10"))
@@ -60,7 +86,8 @@
   (is (not (integer-string? "foo")))
   (is (not (integer-string? "10x")))
   (is (not (integer-string? "1.1")))
-  (is (not (integer-string? ""))))
+  (is (not (integer-string? "")))
+  (is (not (integer-string? nil))))
 
 (deftest test-decimal-string?
   (is (decimal-string? "10"))
@@ -71,7 +98,8 @@
   (is (decimal-string? "3.14159"))
   (is (not (decimal-string? "foo")))
   (is (not (decimal-string? "10x")))
-  (is (not (decimal-string? ""))))
+  (is (not (decimal-string? "")))
+  (is (not (decimal-string? nil))))
 
 (deftest test-gt
   (is ((gt 10) "11"))
@@ -87,6 +115,7 @@
 
 (deftest test-lt
   (is ((lt 10) "9"))
+  (is (not ((matches #"...") "")))   ; corner case
   (is (not ((lt 10) "11")))
   (is (not ((lt 10) "10")))
   (is (not ((lt 10) ""))))
