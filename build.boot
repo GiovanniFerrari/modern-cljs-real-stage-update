@@ -32,7 +32,7 @@
          '[crisptrutski.boot-cljs-test :refer [test-cljs]])
 
 
-(def defaults {:test-dirs #{"test/cljc" "test/clj" "test/cljs"}
+(def defaults {:test-dirs #{"test/cljc"}
                :output-to "main.js"
                :testbed :phantom
                :namespaces '#{modern-cljs.shopping.validators-test
